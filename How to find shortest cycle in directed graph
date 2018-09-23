@@ -1,0 +1,89 @@
+/* Spoj INCARDS - Invitation Cards */
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define pp pair<ll ,ll >
+#define cins(t) scanf("%lld",&t)
+
+void dijkstra(auto adj[],ll  source,auto &dist,ll  n)
+{
+    set<pp>st;
+
+    st.insert({0,source});
+
+
+    dist[source]=0;
+
+    while(!st.empty())
+    {
+        auto cur=*(st.begin());
+        st.erase(st.begin());
+        ll  u=cur.second;
+        ll  k=adj[u].size();
+        for(ll  i=0;i<k;i++)
+        {
+            ll  nbr=adj[u][i].first;
+            ll  weight=adj[u][i].second;
+            ll  newd=weight+dist[u];
+
+            if(newd<dist[nbr])
+            {
+                if(dist[nbr]!=LONG_LONG_MAX)
+                {
+                    auto it=st.find({dist[nbr],nbr});
+
+                        st.erase(it);
+
+
+                }
+                dist[nbr]=newd;
+                st.insert({dist[nbr],nbr});
+
+            }
+
+
+        }
+    }
+
+}
+int main()
+{
+    ll  tc;
+    cins(tc);
+    while(tc--)
+    {
+        ll  p,q;
+        cins(p);
+        cins(q);
+        ll  n=p;
+        vector<pp>adj[n+1],adj2[n+1];
+        while(q--)
+        {
+            ll  s,e,w;
+            cins(s);
+            cins(e);
+            cins(w);
+            adj[s].push_back({e,w});
+            adj2[e].push_back({s,w});
+
+
+
+
+        }
+        vector<ll >dist(n+1,LONG_LONG_MAX);
+        dijkstra(adj,1,dist,n);
+
+        vector<ll >rdist(n+1,LONG_LONG_MAX);
+        dijkstra(adj2,1,rdist,n);
+            ll  sum=0;
+        for(ll  i=2;i<=n;i++)
+        {
+            sum+=(dist[i]+rdist[i]);
+
+
+        }
+
+        printf("%lld\n",sum);
+}
+return 0;
+}
